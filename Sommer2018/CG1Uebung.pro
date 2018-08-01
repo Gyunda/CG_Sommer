@@ -18,7 +18,12 @@ SOURCES += main.cpp \
     CgEvents/CgWindowResizeEvent.cpp \
     CgEvents/CgLoadObjFileEvent.cpp \
     CgUtils/ObjLoader.cpp \
-    CgEvents/CgTrackballEvent.cpp
+    CgEvents/CgTrackballEvent.cpp \
+    CgSceneGraph/ObjectMesh.cpp \
+    CgSceneGraph/ObjectMeshCreator.cpp \
+    CgSceneGraph/CgCube.cpp \
+    CgSceneGraph/CgPolyline.cpp \
+    CgSceneGraph/CgCylinder.cpp
 
 HEADERS += \
     CgQtViewer/CgQtGLRenderWidget.h \
@@ -45,5 +50,10 @@ HEADERS += \
     CgEvents/CgLoadObjFileEvent.h \
     CgUtils/ObjLoader.h \
     CgBase/CgBaseImage.h \
-    CgEvents/CgTrackballEvent.h
+    CgEvents/CgTrackballEvent.h \
+    CgSceneGraph/ObjectMesh.h \
+    CgSceneGraph/ObjectMeshCreator.h \
+    CgSceneGraph/CgCube.h \
+    CgSceneGraph/CgPolyline.h \
+    CgSceneGraph/CgCylinder.h
 

@@ -4,10 +4,14 @@
 #include "CgBase/CgObserver.h"
 #include "CgBase/CgBaseSceneControl.h"
 #include <glm/glm.hpp>
+#include <vector>
 
 class CgBaseEvent;
 class CgBaseRenderer;
 class CgExampleTriangle;
+class ObjectMesh;
+class CgCube;
+class ObjectMeshCreator;
 
 class CgSceneControl : public CgObserver, public CgBaseSceneControl
 {
@@ -22,6 +26,9 @@ public:
 private:
 
     CgBaseRenderer* m_renderer;
+
+    ObjectMeshCreator* creator;
+    std::vector<ObjectMesh*> objects;
 
     CgExampleTriangle* m_triangle;
     glm::mat4 m_current_transformation;

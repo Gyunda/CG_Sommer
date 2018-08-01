@@ -7,6 +7,9 @@
 #include "CgEvents/CgTrackballEvent.h"
 #include "CgBase/CgBaseRenderer.h"
 #include "CgExampleTriangle.h"
+#include "ObjectMesh.h"
+#include "ObjectMeshCreator.h"
+#include "CgCube.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include "CgUtils/ObjLoader.h"
@@ -14,28 +17,33 @@
 
 CgSceneControl::CgSceneControl()
 {
+    creator = new ObjectMeshCreator();
     m_triangle=NULL;
      m_current_transformation=glm::mat4(1.);
       m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
      m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
    m_trackball_rotation=glm::mat4(1.);
      m_triangle= new CgExampleTriangle();
-
+     objects.push_back(creator->createCube());
 
 }
 
 
 CgSceneControl::~CgSceneControl()
 {
-    if(m_triangle!=NULL)
+    if(m_triangle!=NULL) {
         delete m_triangle;
+    }
+    for(int i = 0; i < objects.size(); i++) {
+            delete objects.at(i);
+        }
 }
 
 void CgSceneControl::setRenderer(CgBaseRenderer* r)
 {
     m_renderer=r;
     m_renderer->setSceneControl(this);
-
+    m_renderer->init(objects.at(0));
 
 }
 
@@ -73,6 +81,7 @@ void CgSceneControl::renderObjects()
 
     if(m_triangle!=NULL)
     m_renderer->render(m_triangle);
+    m_renderer->render(objects.at(0));
 
 }
 
