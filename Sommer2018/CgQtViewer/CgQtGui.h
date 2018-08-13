@@ -77,6 +77,10 @@ protected:
 private:
     QSlider *createSlider();
 
+    QSlider* mySlider1;
+    QSlider* mySlider2;
+    QSlider* mySlider3;
+
     // parts of the view
     CgQtGLRenderWidget*    m_glRenderWidget;
     CgQtMainApplication*        m_mainWindow;
@@ -99,6 +103,7 @@ private:
     /* example for usage of qt gui elements, feel free to add what you like */
     void createOptionPanelExample1(QWidget* panel);
     void createOptionPanelExample2(QWidget* panel);
+    void createOptionPanelCubeColor(QWidget* panel);
     QButtonGroup* myButtonGroup;
     QCheckBox* myCheckBox1;
     QSpinBox* mySpinBox1;
@@ -114,6 +119,7 @@ private slots:
     void slotTrackballChanged();
 
     /* slots example qt gui elements */
+    void slotMySliderChanged();
     void slotMySpinBox1Changed();
     void slotMyCheckBox1Changed();
     void slotMyButton1Pressed();

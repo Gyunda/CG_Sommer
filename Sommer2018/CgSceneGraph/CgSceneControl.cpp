@@ -5,6 +5,7 @@
 #include "CgEvents/CgWindowResizeEvent.h"
 #include "CgEvents/CgLoadObjFileEvent.h"
 #include "CgEvents/CgTrackballEvent.h"
+#include "../CgEvents/CgColorChangedEvent.h"
 #include "CgBase/CgBaseRenderer.h"
 #include "CgExampleTriangle.h"
 #include "ObjectMesh.h"
@@ -67,9 +68,6 @@ void CgSceneControl::renderObjects()
 
     m_renderer->setUniformValue("matSpecularColor",glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
-
-
-
 
 
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
@@ -170,6 +168,15 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
 
         m_triangle->init(pos,norm,indx);
         m_renderer->init(m_triangle);
+        m_renderer->redraw();
+    }
+
+    if(e->getType() & Cg::CgColorChangedEvent)
+    {
+        CgColorChangedEvent* ev = (CgColorChangedEvent*)e;
+        std::cout << *ev <<std::endl;
+        objects.at(0);
+        m_renderer->setUniformValue("cubeColor", glm::vec4(ev->getColor().x, ev->getColor().y, ev->getColor().z, 1.0));
         m_renderer->redraw();
     }
 

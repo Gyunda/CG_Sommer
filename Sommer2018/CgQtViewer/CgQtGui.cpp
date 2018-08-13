@@ -9,6 +9,7 @@
 #include "../CgEvents/CgWindowResizeEvent.h"
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
+#include "../CgEvents/CgColorChangedEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -52,9 +53,13 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QWidget *otheropt = new QWidget;
     createOptionPanelExample2(otheropt);
 
+    QWidget *cubeColor = new QWidget;
+    createOptionPanelCubeColor(cubeColor);
+
     QTabWidget* m_tabs = new QTabWidget();
     m_tabs->addTab(opt,"&My Tab1");
     m_tabs->addTab(otheropt,"&My Tab2");
+    m_tabs->addTab(cubeColor, "&Cube Color");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -125,12 +130,13 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
 
 QSlider *CgQtGui::createSlider()
 {
-    QSlider *slider = new QSlider(Qt::Vertical);
-    slider->setRange(0, 360 * 16);
+    QSlider *slider = new QSlider(Qt::Horizontal);
+    slider->setRange(0, 255);
     slider->setSingleStep(16);
     slider->setPageStep(15 * 16);
     slider->setTickInterval(15 * 16);
     slider->setTickPosition(QSlider::TicksRight);
+    connect(slider, SIGNAL( sliderMoved(int)) , this, SLOT(slotMySliderChanged()));
     return slider;
 }
 
@@ -231,6 +237,34 @@ void CgQtGui::createOptionPanelExample2(QWidget* parent)
 
     connect(myButtonGroup, SIGNAL( buttonClicked(int) ), this, SLOT( slotButtonGroupSelectionChanged() ) );
     parent->setLayout(tab2_control);
+
+}
+
+void CgQtGui::createOptionPanelCubeColor(QWidget* parent)
+{
+    QVBoxLayout *tab3_control = new QVBoxLayout();  //Layout erstellen
+
+    QLabel *options_label = new QLabel("Slider");   //Name erstellen
+    tab3_control->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignTop);
+
+    mySlider1 = createSlider();   //slider
+    mySlider2 = createSlider();
+    mySlider3 = createSlider();
+    tab3_control->addWidget(mySlider1);
+    tab3_control->addWidget(mySlider2);
+    tab3_control->addWidget(mySlider3);
+
+    parent->setLayout(tab3_control);
+
+}
+
+
+void CgQtGui::slotMySliderChanged()
+{
+    CgBaseEvent* e = new CgColorChangedEvent((mySlider1->value())/255.0,(mySlider2->value())/255.0,(mySlider3->value())/255.0);
+
+    notifyObserver(e);
 
 }
 

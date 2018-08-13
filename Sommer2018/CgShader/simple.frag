@@ -3,10 +3,10 @@
 in vec3 vert;
 in vec3 vertNormal;
 
-uniform vec4 mycolor;
+uniform vec4 cubeColor;
 
 
     void main() {
      
-       gl_FragColor = mycolor;
+       gl_FragColor = cubeColor;
     }
