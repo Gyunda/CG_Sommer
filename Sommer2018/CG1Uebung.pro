@@ -23,7 +23,9 @@ SOURCES += main.cpp \
     CgSceneGraph/ObjectMeshCreator.cpp \
     CgSceneGraph/CgCube.cpp \
     CgSceneGraph/CgPolyline.cpp \
-    CgSceneGraph/CgCylinder.cpp
+    CgSceneGraph/CgCylinder.cpp \
+    CgEvents/CgColorChangedEvent.cpp \
+    CgSceneGraph/CGIdGiver.cpp
 
 HEADERS += \
     CgQtViewer/CgQtGLRenderWidget.h \
@@ -55,5 +57,7 @@ HEADERS += \
     CgSceneGraph/ObjectMeshCreator.h \
     CgSceneGraph/CgCube.h \
     CgSceneGraph/CgPolyline.h \
-    CgSceneGraph/CgCylinder.h
+    CgSceneGraph/CgCylinder.h \
+    CgEvents/CgColorChangedEvent.h \
+    CgSceneGraph/CGIdGiver.h
 

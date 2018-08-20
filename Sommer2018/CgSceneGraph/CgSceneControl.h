@@ -12,6 +12,7 @@ class CgExampleTriangle;
 class ObjectMesh;
 class CgCube;
 class ObjectMeshCreator;
+class CGIdGiver;
 
 class CgSceneControl : public CgObserver, public CgBaseSceneControl
 {
@@ -28,6 +29,7 @@ private:
     CgBaseRenderer* m_renderer;
 
     ObjectMeshCreator* creator;
+    CGIdGiver* idGiver;
     std::vector<ObjectMesh*> objects;
 
     CgExampleTriangle* m_triangle;

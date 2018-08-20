@@ -8,10 +8,7 @@ ObjectMesh* ObjectMeshCreator::createCube() {
     return new CgCube();
 }
 
-//  ObjectMesh* ObjectMeshCreator::createCylinder() {
-//
-//  }
+ObjectMesh* ObjectMeshCreator::createCylinder() {
+    return new CgCylinder(6, 3, 1);
+  }
 
- // ObjectMesh* ObjectMeshCreator::createPolyLine() {
-//
-//  }

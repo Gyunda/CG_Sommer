@@ -67,7 +67,9 @@ SOURCES       = ../Sommer2018/main.cpp \
 		../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp \
 		../Sommer2018/CgSceneGraph/CgCube.cpp \
 		../Sommer2018/CgSceneGraph/CgPolyline.cpp \
-		../Sommer2018/CgSceneGraph/CgCylinder.cpp moc_CgQtGLRenderWidget.cpp \
+		../Sommer2018/CgSceneGraph/CgCylinder.cpp \
+		../Sommer2018/CgEvents/CgColorChangedEvent.cpp \
+		../Sommer2018/CgSceneGraph/CGIdGiver.cpp moc_CgQtGLRenderWidget.cpp \
 		moc_CgQtGui.cpp \
 		moc_CgQtMainApplication.cpp
 OBJECTS       = main.o \
@@ -90,6 +92,8 @@ OBJECTS       = main.o \
 		CgCube.o \
 		CgPolyline.o \
 		CgCylinder.o \
+		CgColorChangedEvent.o \
+		CGIdGiver.o \
 		moc_CgQtGLRenderWidget.o \
 		moc_CgQtGui.o \
 		moc_CgQtMainApplication.o
@@ -178,7 +182,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Sommer2018/CgSceneGraph/ObjectMeshCreator.h \
 		../Sommer2018/CgSceneGraph/CgCube.h \
 		../Sommer2018/CgSceneGraph/CgPolyline.h \
-		../Sommer2018/CgSceneGraph/CgCylinder.h ../Sommer2018/main.cpp \
+		../Sommer2018/CgSceneGraph/CgCylinder.h \
+		../Sommer2018/CgEvents/CgColorChangedEvent.h \
+		../Sommer2018/CgSceneGraph/CGIdGiver.h ../Sommer2018/main.cpp \
 		../Sommer2018/CgQtViewer/CGQtGLRenderWidget.cpp \
 		../Sommer2018/CgQtViewer/CgQtGui.cpp \
 		../Sommer2018/CgBase/CgObservable.cpp \
@@ -197,7 +203,9 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp \
 		../Sommer2018/CgSceneGraph/CgCube.cpp \
 		../Sommer2018/CgSceneGraph/CgPolyline.cpp \
-		../Sommer2018/CgSceneGraph/CgCylinder.cpp
+		../Sommer2018/CgSceneGraph/CgCylinder.cpp \
+		../Sommer2018/CgEvents/CgColorChangedEvent.cpp \
+		../Sommer2018/CgSceneGraph/CGIdGiver.cpp
 QMAKE_TARGET  = CgViewer
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = CgViewer
@@ -365,8 +373,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../Sommer2018/CgQtViewer/CgQtGLRenderWidget.h ../Sommer2018/CgQtViewer/CgQtGui.h ../Sommer2018/CgBase/CgObserver.h ../Sommer2018/CgBase/CgObservable.h ../Sommer2018/CgBase/CgBaseEvent.h ../Sommer2018/CgBase/CgEnums.h ../Sommer2018/CgEvents/CgMouseEvent.h ../Sommer2018/CgQtViewer/CgQtMainApplication.h ../Sommer2018/CgSceneGraph/CgSceneControl.h ../Sommer2018/CgEvents/CgKeyEvent.h ../Sommer2018/CgBase/CgBaseRenderer.h ../Sommer2018/CgBase/CgBaseRenderableObject.h ../Sommer2018/CgSceneGraph/CgExampleTriangle.h ../Sommer2018/CgBase/CgBasePointCloud.h ../Sommer2018/CgBase/CgBaseTriangleMesh.h ../Sommer2018/CgBase/CgBasePolygonMesh.h ../Sommer2018/CgBase/CgBasePolyline.h ../Sommer2018/CgBase/CgBaseSceneControl.h ../Sommer2018/CgQtViewer/CgQtGlBufferObject.h ../Sommer2018/CgQtViewer/CgTrackball.h ../Sommer2018/CgEvents/CgWindowResizeEvent.h ../Sommer2018/CgEvents/CgLoadObjFileEvent.h ../Sommer2018/CgUtils/ObjLoader.h ../Sommer2018/CgBase/CgBaseImage.h ../Sommer2018/CgEvents/CgTrackballEvent.h ../Sommer2018/CgSceneGraph/ObjectMesh.h ../Sommer2018/CgSceneGraph/ObjectMeshCreator.h ../Sommer2018/CgSceneGraph/CgCube.h ../Sommer2018/CgSceneGraph/CgPolyline.h ../Sommer2018/CgSceneGraph/CgCylinder.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../Sommer2018/main.cpp ../Sommer2018/CgQtViewer/CGQtGLRenderWidget.cpp ../Sommer2018/CgQtViewer/CgQtGui.cpp ../Sommer2018/CgBase/CgObservable.cpp ../Sommer2018/CgEvents/CgMouseEvent.cpp ../Sommer2018/CgQtViewer/CgQtMainApplication.cpp ../Sommer2018/CgSceneGraph/CgSceneControl.cpp ../Sommer2018/CgEvents/CgKeyEvent.cpp ../Sommer2018/CgSceneGraph/CgExampleTriangle.cpp ../Sommer2018/CgQtViewer/CgQtGlBufferObject.cpp ../Sommer2018/CgQtViewer/CgTrackball.cpp ../Sommer2018/CgEvents/CgWindowResizeEvent.cpp ../Sommer2018/CgEvents/CgLoadObjFileEvent.cpp ../Sommer2018/CgUtils/ObjLoader.cpp ../Sommer2018/CgEvents/CgTrackballEvent.cpp ../Sommer2018/CgSceneGraph/ObjectMesh.cpp ../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp ../Sommer2018/CgSceneGraph/CgCube.cpp ../Sommer2018/CgSceneGraph/CgPolyline.cpp ../Sommer2018/CgSceneGraph/CgCylinder.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../Sommer2018/CgQtViewer/CgQtGLRenderWidget.h ../Sommer2018/CgQtViewer/CgQtGui.h ../Sommer2018/CgBase/CgObserver.h ../Sommer2018/CgBase/CgObservable.h ../Sommer2018/CgBase/CgBaseEvent.h ../Sommer2018/CgBase/CgEnums.h ../Sommer2018/CgEvents/CgMouseEvent.h ../Sommer2018/CgQtViewer/CgQtMainApplication.h ../Sommer2018/CgSceneGraph/CgSceneControl.h ../Sommer2018/CgEvents/CgKeyEvent.h ../Sommer2018/CgBase/CgBaseRenderer.h ../Sommer2018/CgBase/CgBaseRenderableObject.h ../Sommer2018/CgSceneGraph/CgExampleTriangle.h ../Sommer2018/CgBase/CgBasePointCloud.h ../Sommer2018/CgBase/CgBaseTriangleMesh.h ../Sommer2018/CgBase/CgBasePolygonMesh.h ../Sommer2018/CgBase/CgBasePolyline.h ../Sommer2018/CgBase/CgBaseSceneControl.h ../Sommer2018/CgQtViewer/CgQtGlBufferObject.h ../Sommer2018/CgQtViewer/CgTrackball.h ../Sommer2018/CgEvents/CgWindowResizeEvent.h ../Sommer2018/CgEvents/CgLoadObjFileEvent.h ../Sommer2018/CgUtils/ObjLoader.h ../Sommer2018/CgBase/CgBaseImage.h ../Sommer2018/CgEvents/CgTrackballEvent.h ../Sommer2018/CgSceneGraph/ObjectMesh.h ../Sommer2018/CgSceneGraph/ObjectMeshCreator.h ../Sommer2018/CgSceneGraph/CgCube.h ../Sommer2018/CgSceneGraph/CgPolyline.h ../Sommer2018/CgSceneGraph/CgCylinder.h ../Sommer2018/CgEvents/CgColorChangedEvent.h ../Sommer2018/CgSceneGraph/CGIdGiver.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../Sommer2018/main.cpp ../Sommer2018/CgQtViewer/CGQtGLRenderWidget.cpp ../Sommer2018/CgQtViewer/CgQtGui.cpp ../Sommer2018/CgBase/CgObservable.cpp ../Sommer2018/CgEvents/CgMouseEvent.cpp ../Sommer2018/CgQtViewer/CgQtMainApplication.cpp ../Sommer2018/CgSceneGraph/CgSceneControl.cpp ../Sommer2018/CgEvents/CgKeyEvent.cpp ../Sommer2018/CgSceneGraph/CgExampleTriangle.cpp ../Sommer2018/CgQtViewer/CgQtGlBufferObject.cpp ../Sommer2018/CgQtViewer/CgTrackball.cpp ../Sommer2018/CgEvents/CgWindowResizeEvent.cpp ../Sommer2018/CgEvents/CgLoadObjFileEvent.cpp ../Sommer2018/CgUtils/ObjLoader.cpp ../Sommer2018/CgEvents/CgTrackballEvent.cpp ../Sommer2018/CgSceneGraph/ObjectMesh.cpp ../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp ../Sommer2018/CgSceneGraph/CgCube.cpp ../Sommer2018/CgSceneGraph/CgPolyline.cpp ../Sommer2018/CgSceneGraph/CgCylinder.cpp ../Sommer2018/CgEvents/CgColorChangedEvent.cpp ../Sommer2018/CgSceneGraph/CGIdGiver.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -452,7 +460,8 @@ CgQtGui.o: ../Sommer2018/CgQtViewer/CgQtGui.cpp ../Sommer2018/CgQtViewer/CgQtGLR
 		../Sommer2018/CgEvents/CgKeyEvent.h \
 		../Sommer2018/CgEvents/CgWindowResizeEvent.h \
 		../Sommer2018/CgEvents/CgLoadObjFileEvent.h \
-		../Sommer2018/CgEvents/CgTrackballEvent.h
+		../Sommer2018/CgEvents/CgTrackballEvent.h \
+		../Sommer2018/CgEvents/CgColorChangedEvent.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgQtGui.o ../Sommer2018/CgQtViewer/CgQtGui.cpp
 
 CgObservable.o: ../Sommer2018/CgBase/CgObservable.cpp ../Sommer2018/CgBase/CgObservable.h \
@@ -481,10 +490,15 @@ CgSceneControl.o: ../Sommer2018/CgSceneGraph/CgSceneControl.cpp ../Sommer2018/Cg
 		../Sommer2018/CgEvents/CgWindowResizeEvent.h \
 		../Sommer2018/CgEvents/CgLoadObjFileEvent.h \
 		../Sommer2018/CgEvents/CgTrackballEvent.h \
+		../Sommer2018/CgEvents/CgColorChangedEvent.h \
 		../Sommer2018/CgBase/CgBaseRenderer.h \
 		../Sommer2018/CgSceneGraph/CgExampleTriangle.h \
 		../Sommer2018/CgBase/CgBaseTriangleMesh.h \
 		../Sommer2018/CgBase/CgBaseRenderableObject.h \
+		../Sommer2018/CgSceneGraph/ObjectMesh.h \
+		../Sommer2018/CgSceneGraph/ObjectMeshCreator.h \
+		../Sommer2018/CgSceneGraph/CgCube.h \
+		../Sommer2018/CgSceneGraph/CgCylinder.h \
 		../Sommer2018/CgUtils/ObjLoader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgSceneControl.o ../Sommer2018/CgSceneGraph/CgSceneControl.cpp
 
@@ -536,13 +550,26 @@ ObjectMesh.o: ../Sommer2018/CgSceneGraph/ObjectMesh.cpp ../Sommer2018/CgSceneGra
 		../Sommer2018/CgBase/CgEnums.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ObjectMesh.o ../Sommer2018/CgSceneGraph/ObjectMesh.cpp
 
-ObjectMeshCreator.o: ../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp ../Sommer2018/CgSceneGraph/ObjectMeshCreator.h
+ObjectMeshCreator.o: ../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp ../Sommer2018/CgSceneGraph/ObjectMeshCreator.h \
+		../Sommer2018/CgSceneGraph/CgCube.h \
+		../Sommer2018/CgBase/CgBaseTriangleMesh.h \
+		../Sommer2018/CgBase/CgBaseRenderableObject.h \
+		../Sommer2018/CgBase/CgEnums.h \
+		../Sommer2018/CgSceneGraph/ObjectMesh.h \
+		../Sommer2018/CgSceneGraph/CgCylinder.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ObjectMeshCreator.o ../Sommer2018/CgSceneGraph/ObjectMeshCreator.cpp
 
-CgCube.o: ../Sommer2018/CgSceneGraph/CgCube.cpp ../Sommer2018/CgSceneGraph/CgCube.h
+CgCube.o: ../Sommer2018/CgSceneGraph/CgCube.cpp ../Sommer2018/CgSceneGraph/CgCube.h \
+		../Sommer2018/CgBase/CgBaseTriangleMesh.h \
+		../Sommer2018/CgBase/CgBaseRenderableObject.h \
+		../Sommer2018/CgBase/CgEnums.h \
+		../Sommer2018/CgSceneGraph/ObjectMesh.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgCube.o ../Sommer2018/CgSceneGraph/CgCube.cpp
 
-CgPolyline.o: ../Sommer2018/CgSceneGraph/CgPolyline.cpp ../Sommer2018/CgSceneGraph/CgPolyline.h
+CgPolyline.o: ../Sommer2018/CgSceneGraph/CgPolyline.cpp ../Sommer2018/CgSceneGraph/CgPolyline.h \
+		../Sommer2018/CgBase/CgBasePolyline.h \
+		../Sommer2018/CgBase/CgBaseRenderableObject.h \
+		../Sommer2018/CgBase/CgEnums.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgPolyline.o ../Sommer2018/CgSceneGraph/CgPolyline.cpp
 
 CgCylinder.o: ../Sommer2018/CgSceneGraph/CgCylinder.cpp ../Sommer2018/CgSceneGraph/CgCylinder.h \
@@ -551,6 +578,14 @@ CgCylinder.o: ../Sommer2018/CgSceneGraph/CgCylinder.cpp ../Sommer2018/CgSceneGra
 		../Sommer2018/CgBase/CgEnums.h \
 		../Sommer2018/CgSceneGraph/ObjectMesh.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgCylinder.o ../Sommer2018/CgSceneGraph/CgCylinder.cpp
+
+CgColorChangedEvent.o: ../Sommer2018/CgEvents/CgColorChangedEvent.cpp ../Sommer2018/CgEvents/CgColorChangedEvent.h \
+		../Sommer2018/CgBase/CgBaseEvent.h \
+		../Sommer2018/CgBase/CgEnums.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CgColorChangedEvent.o ../Sommer2018/CgEvents/CgColorChangedEvent.cpp
+
+CGIdGiver.o: ../Sommer2018/CgSceneGraph/CGIdGiver.cpp ../Sommer2018/CgSceneGraph/CGIdGiver.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o CGIdGiver.o ../Sommer2018/CgSceneGraph/CGIdGiver.cpp
 
 moc_CgQtGLRenderWidget.o: moc_CgQtGLRenderWidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_CgQtGLRenderWidget.o moc_CgQtGLRenderWidget.cpp

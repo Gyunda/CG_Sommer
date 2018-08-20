@@ -5,10 +5,12 @@
 #include "CgEvents/CgWindowResizeEvent.h"
 #include "CgEvents/CgLoadObjFileEvent.h"
 #include "CgEvents/CgTrackballEvent.h"
+#include "../CgEvents/CgColorChangedEvent.h"
 #include "CgBase/CgBaseRenderer.h"
 #include "CgExampleTriangle.h"
 #include "ObjectMesh.h"
 #include "ObjectMeshCreator.h"
+#include "CGIdGiver.h"
 #include "CgCube.h"
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
@@ -18,13 +20,14 @@
 CgSceneControl::CgSceneControl()
 {
     creator = new ObjectMeshCreator();
+    idGiver = CGIdGiver::getInstance();
     m_triangle=NULL;
      m_current_transformation=glm::mat4(1.);
       m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
      m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
    m_trackball_rotation=glm::mat4(1.);
      m_triangle= new CgExampleTriangle();
-     objects.push_back(creator->createCube());
+     objects.push_back(creator->createCylinder());
 
 }
 
@@ -44,6 +47,7 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
     m_renderer=r;
     m_renderer->setSceneControl(this);
     m_renderer->init(objects.at(0));
+    m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0)); //eingefügt damit color change richtig läuft (so ein bullshit)
 
 }
 
@@ -54,7 +58,7 @@ void CgSceneControl::renderObjects()
     // Materialeigenschaften setzen
     // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
 
-    m_renderer->setUniformValue("mycolor",glm::vec4(1.0,0.0,0.0,1.0));
+    //m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0));
 
 
     m_renderer->setUniformValue("matDiffuseColor",glm::vec4(0.35,0.31,0.09,1.0));
@@ -67,9 +71,6 @@ void CgSceneControl::renderObjects()
 
     m_renderer->setUniformValue("matSpecularColor",glm::vec4(0.8,0.72,0.21,1.0));
     m_renderer->setUniformValue("lightSpecularColor",glm::vec4(1.0,1.0,1.0,1.0));
-
-
-
 
 
     glm::mat4 mv_matrix = m_lookAt_matrix * m_trackball_rotation* m_current_transformation ;
@@ -101,7 +102,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
          // hier kommt jetzt die Abarbeitung des Events hin...
     }
 
-
+    //Rotieren im Fenster
     if(e->getType() & Cg::CgTrackballEvent)
     {
         CgTrackballEvent* ev = (CgTrackballEvent*)e;
@@ -168,8 +169,17 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
 
 
 
-        m_triangle->init(pos,norm,indx);
-        m_renderer->init(m_triangle);
+        objects.at(0)->init(pos,norm,indx);
+        m_renderer->init(objects.at(0));
+        m_renderer->redraw();
+    }
+
+    if(e->getType() & Cg::CgColorChangedEvent)
+    {
+        CgColorChangedEvent* ev = (CgColorChangedEvent*)e;
+        std::cout << *ev <<std::endl;
+       // objects.at(0);
+        m_renderer->setUniformValue("mycolor", glm::vec4(ev->getColor().x, ev->getColor().y, ev->getColor().z, 1.0));
         m_renderer->redraw();
     }
 

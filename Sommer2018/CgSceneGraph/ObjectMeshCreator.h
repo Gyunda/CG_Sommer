@@ -4,13 +4,14 @@
 class ObjectMesh;
 
 #include "CgCube.h"
+#include "CgCylinder.h"
 
 class ObjectMeshCreator
 {
 public:
     ObjectMeshCreator();
     ObjectMesh* createCube();
-   // virtual ObjectMesh* createCylinder() = 0;
+    ObjectMesh* createCylinder();
    // virtual ObjectMesh* createPolyLine() = 0;
 };
 

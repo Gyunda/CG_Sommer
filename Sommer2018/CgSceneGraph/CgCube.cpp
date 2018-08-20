@@ -3,7 +3,7 @@
 
 #define SIZE 0.25
 
-CgCube::CgCube() : m_type(Cg::TriangleMesh)
+CgCube::CgCube()
 {
     //8 Eckpunkte für Würfel
     m_vertices.push_back(glm::vec3(-SIZE,-SIZE,SIZE)); //0 //Würfel
@@ -94,46 +94,8 @@ m_tex_coords.clear();
 m_triangle_indices.clear();
 m_face_normals.clear();
 m_face_colors.clear();
+m_face_focus.clear();
 }
 
 
-const std::vector<glm::vec3>& CgCube::getVertices() const
-{
-
-return m_vertices;
-}
-
-const std::vector<glm::vec3>& CgCube::getVertexNormals() const
-{
-return m_vertex_normals;
-}
-
-const std::vector<glm::vec3>& CgCube::getVertexColors() const
-{
-return m_vertex_colors;
-}
-
-const std::vector<glm::vec2>& CgCube:: getVertexTexCoords() const
-{
-return m_tex_coords;
-}
-
-const std::vector<unsigned int>& CgCube::getTriangleIndices() const
-{
-return m_triangle_indices;
-}
-
-const std::vector<glm::vec3>& CgCube::getFaceNormals() const
-{
-return m_face_normals;
-}
-
-const std::vector<glm::vec3>& CgCube::getFaceColors() const
-{
-return m_face_colors;
-}
-
-const std::vector<glm::vec3>& CgCube::getFaceFocus() const {
-    return m_face_focus;
-}
 
