@@ -10,6 +10,8 @@
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
 #include "../CgEvents/CgColorChangedEvent.h"
+#include "../CgEvents/CgDrawEvent.h"
+#include "../CgEvents/CgSmoothLineEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -29,6 +31,8 @@
 #include <QActionGroup>
 #include <QFileDialog>
 #include <iostream>
+#include <QSignalMapper>
+#include<stdio.h>
 
 
 
@@ -47,19 +51,35 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QHBoxLayout *container = new QHBoxLayout;
 
 
+
+
+    QWidget *cube = new QWidget;
+    createCubePanel(cube);
+
+    QWidget *cylinder = new QWidget;
+    createCylinderPanel(cylinder);
+
+    QWidget *cubeColor = new QWidget;
+    createOptionPanelCubeColor(cubeColor);
+
+    QWidget *rotate = new QWidget;
+    createRotatePanel(rotate);
+
     QWidget *opt = new QWidget;
     createOptionPanelExample1(opt);
 
     QWidget *otheropt = new QWidget;
     createOptionPanelExample2(otheropt);
 
-    QWidget *cubeColor = new QWidget;
-    createOptionPanelCubeColor(cubeColor);
+
 
     QTabWidget* m_tabs = new QTabWidget();
+    m_tabs->addTab(cube,"&Würfel");
+    m_tabs->addTab(cylinder, "Zylinder");
+    m_tabs->addTab(cubeColor, "&Farbe");
+    m_tabs->addTab(rotate, "&Rotationskörper");
     m_tabs->addTab(opt,"&My Tab1");
     m_tabs->addTab(otheropt,"&My Tab2");
-    m_tabs->addTab(cubeColor, "&Cube Color");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -140,7 +160,61 @@ QSlider *CgQtGui::createSlider()
     return slider;
 }
 
+//Panels in der GUI
 
+void CgQtGui::createCubePanel(QWidget *parent) {
+    QVBoxLayout *cube_control = new QVBoxLayout();
+    QPushButton* cube = new QPushButton("Würfel");
+    connect(cube, SIGNAL(clicked()), this, SLOT(slotDrawCube()));
+    QCheckBox* facenormale = new QCheckBox("Facenormale");
+    connect(facenormale, SIGNAL(clicked()), this, SLOT(slotDrawFaceNormals()));
+    QPushButton* clear = new QPushButton("löschen");
+
+    cube_control->addWidget(cube);
+    cube_control->addWidget(facenormale);
+    cube_control->addWidget(clear);
+
+    parent->setLayout(cube_control);
+}
+
+void CgQtGui::createCylinderPanel(QWidget *parent) {
+    QVBoxLayout *cylinder_control = new QVBoxLayout();
+    QPushButton* cylinder = new QPushButton("Zylinder");
+    connect(cylinder, SIGNAL(clicked()), this, SLOT(slotDrawCylinder()));
+    QSpinBox* rotation = new QSpinBox();
+    rotation->setMinimum(4);
+    rotation->setMaximum(100);
+    rotation->setValue(6);
+    QSpinBox* hoehe = new QSpinBox();
+    hoehe->setMinimum(1);
+    hoehe->setMaximum(100);
+    hoehe->setValue(3);
+    QCheckBox* facenormale = new QCheckBox("Facenormale");
+    connect(facenormale, SIGNAL(clicked()), this, SLOT(slotDrawFaceNormals()));
+    QCheckBox* vertexnormale = new QCheckBox("Vertexnormale");
+    QPushButton* clear = new QPushButton("löschen");
+
+    cylinder_control->addWidget(cylinder);
+    cylinder_control->addWidget(rotation);
+    cylinder_control->addWidget(hoehe);
+    cylinder_control->addWidget(facenormale);
+    cylinder_control->addWidget(vertexnormale);
+    cylinder_control->addWidget(clear);
+
+    parent->setLayout(cylinder_control);
+}
+
+void CgQtGui::createRotatePanel(QWidget *parent) {
+    QVBoxLayout *rotate_control = new QVBoxLayout();
+    QPushButton* smooth = new QPushButton("Glätten");
+    connect(smooth, SIGNAL(clicked()), this, SLOT(slotSmoothLine()));
+    QPushButton* rotate = new QPushButton("Rotieren");
+    connect(rotate, SIGNAL(clicked()), this, SLOT(slotRotateLine()));
+    rotate_control->addWidget(smooth);
+    rotate_control->addWidget(rotate);
+
+    parent->setLayout(rotate_control);
+}
 
 
 
@@ -241,7 +315,6 @@ void CgQtGui::createOptionPanelExample2(QWidget* parent)
 }
 
 
-//Slider für Farbwechsel
 void CgQtGui::createOptionPanelCubeColor(QWidget* parent)
 {
     QVBoxLayout *tab3_control = new QVBoxLayout();  //Layout erstellen
@@ -263,6 +336,10 @@ void CgQtGui::createOptionPanelCubeColor(QWidget* parent)
 }
 
 
+
+//Slots für Events
+
+
 void CgQtGui::slotMySliderChanged()
 {
     CgBaseEvent* e = new CgColorChangedEvent((mySlider1->value())/255.0,(mySlider2->value())/255.0,(mySlider3->value())/255.0);
@@ -270,6 +347,46 @@ void CgQtGui::slotMySliderChanged()
     notifyObserver(e);
 
 }
+
+
+void CgQtGui::slotDrawCube() {
+    CgBaseEvent* e = new CgDrawEvent(1);
+
+    notifyObserver(e);
+}
+
+void CgQtGui::slotDrawCylinder() {
+    CgBaseEvent* e = new CgDrawEvent(2);
+
+    notifyObserver(e);
+}
+
+void CgQtGui::slotDrawFaceNormals() {
+    CgBaseEvent* e = new CgDrawEvent(3);
+
+    notifyObserver(e);
+}
+
+void CgQtGui::slotDrawVertexNormals() {
+    CgBaseEvent* e = new CgDrawEvent(4);
+
+    notifyObserver(e);
+}
+
+void CgQtGui::slotSmoothLine() {
+    //printf("slotsmoothline\n");
+    CgBaseEvent* e = new CgSmoothLineEvent();
+
+    notifyObserver(e);
+}
+
+void CgQtGui::slotRotateLine() {
+
+}
+
+
+
+
 
 
 

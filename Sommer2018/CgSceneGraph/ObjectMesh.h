@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <stdio.h>
 #include <string>
+#include "CgPolyline.h"
 
 #include "CgBase/CgBaseTriangleMesh.h"
 

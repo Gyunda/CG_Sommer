@@ -25,7 +25,10 @@ SOURCES += main.cpp \
     CgSceneGraph/CgPolyline.cpp \
     CgSceneGraph/CgCylinder.cpp \
     CgEvents/CgColorChangedEvent.cpp \
-    CgSceneGraph/CGIdGiver.cpp
+    CgSceneGraph/CGIdGiver.cpp \
+    CgEvents/CgDrawEvent.cpp \
+    CgEvents/CgSmoothLineEvent.cpp \
+    CgSceneGraph/RotationObject.cpp
 
 HEADERS += \
     CgQtViewer/CgQtGLRenderWidget.h \
@@ -59,5 +62,8 @@ HEADERS += \
     CgSceneGraph/CgPolyline.h \
     CgSceneGraph/CgCylinder.h \
     CgEvents/CgColorChangedEvent.h \
-    CgSceneGraph/CGIdGiver.h
+    CgSceneGraph/CGIdGiver.h \
+    CgEvents/CgDrawEvent.h \
+    CgEvents/CgSmoothLineEvent.h \
+    CgSceneGraph/RotationObject.h
 

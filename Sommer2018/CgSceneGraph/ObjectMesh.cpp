@@ -5,7 +5,6 @@ unsigned int ObjectMesh::total_ids = 0;
 
 ObjectMesh::ObjectMesh() : m_id(total_ids++), m_type(Cg::TriangleMesh)
 {
-
 }
 void ObjectMesh::print_ids() {
     printf("aktuelle ID: %d\n", m_id);

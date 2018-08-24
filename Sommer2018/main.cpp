@@ -9,6 +9,7 @@
 #include "CgQtViewer/CgQtGLRenderWidget.h"
 #include "CgQtViewer/CgQtGui.h"
 #include "CgSceneGraph/CgSceneControl.h"
+#include "CgSceneGraph/CGIdGiver.h"
 
 int main(int argc, char **argv) {
 
@@ -68,7 +69,7 @@ int main(int argc, char **argv) {
     /*************************************************************************************/
     /*   Control: Scene-Controller erzeugen                                              */
     /*************************************************************************************/
-
+       CGIdGiver* idGiver = CGIdGiver::getInstance();
        CgSceneControl* scene_control = new CgSceneControl();
 
        // Controller und View über Observer Pattern verbinden

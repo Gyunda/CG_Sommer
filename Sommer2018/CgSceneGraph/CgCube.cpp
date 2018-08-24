@@ -68,13 +68,20 @@ CgCube::CgCube()
 
 
     //Berechnung der Face_Normals (senkrechte auf Dreiecksfläche)
+    calculateFaceNormals();
+
+    //Berechnung der Schwerpunkte der Dreiecke
+    calculateFaceFocus();
+}
+void CgCube::calculateFaceNormals() {
     for(int i=0; i < 12; i++) {
         glm::vec3 a = m_vertices.at(m_triangle_indices.at(i*3+1)) - m_vertices.at(m_triangle_indices.at(i*3+2));
         glm::vec3 b =m_vertices.at(m_triangle_indices.at(i*3+1)) - m_vertices.at(m_triangle_indices.at(i*3));
         m_face_normals.push_back(glm::cross(a,b));
     }
+}
 
-    //Berechnung der Schwerpunkte der Dreiecke
+void CgCube::calculateFaceFocus() {
     for(int i = 0; i < 12; i++) {
         glm::vec3 zwischen = m_vertices.at(m_triangle_indices.at(i*3)) + m_vertices.at(m_triangle_indices.at(i*3+1)) + m_vertices.at(m_triangle_indices.at(i*3+2));
         zwischen[0] = zwischen[0]/3;

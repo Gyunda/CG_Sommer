@@ -92,7 +92,7 @@ private:
     CgQtGuiEventHandler*   m_event_handler;
 
 
-
+    QWidget*               m_cube_cylinder_panel;
     QWidget*               m_option_panel_ex1;
     QWidget*               m_option_panel_ex2;
     QWidget*               m_option_panel_ex3;
@@ -101,6 +101,9 @@ private:
 
 
     /* example for usage of qt gui elements, feel free to add what you like */
+    void createCubePanel(QWidget* panel);
+    void createCylinderPanel(QWidget* panel);
+    void createRotatePanel(QWidget* panel);
     void createOptionPanelExample1(QWidget* panel);
     void createOptionPanelExample2(QWidget* panel);
     void createOptionPanelCubeColor(QWidget* panel);
@@ -119,6 +122,12 @@ private slots:
     void slotTrackballChanged();
 
     /* slots example qt gui elements */
+    void slotDrawCube();
+    void slotDrawCylinder();
+    void slotDrawFaceNormals();
+    void slotDrawVertexNormals();
+    void slotSmoothLine();
+    void slotRotateLine();
     void slotMySliderChanged();
     void slotMySpinBox1Changed();
     void slotMyCheckBox1Changed();

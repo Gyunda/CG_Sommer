@@ -2,9 +2,11 @@
 
 #include "CgBase/CgEnums.h"
 
-CgPolyline::CgPolyline(unsigned int id, glm::vec3 start, glm::vec3 end, glm::vec3 color, unsigned int lineWidth):
+unsigned int CgPolyline::total_ids = 1000;
+
+CgPolyline::CgPolyline(glm::vec3 start, glm::vec3 end, glm::vec3 color, unsigned int lineWidth):
     m_type(Cg::Polyline),
-    m_id(id)
+    m_id(total_ids++)
 {
     m_verticies.push_back(start);
     m_verticies.push_back(end);
@@ -12,9 +14,9 @@ CgPolyline::CgPolyline(unsigned int id, glm::vec3 start, glm::vec3 end, glm::vec
     m_lineWidth = lineWidth;
 }
 
-CgPolyline::CgPolyline(unsigned int id, std::vector<glm::vec3> verticies, unsigned int lineWidth): //unendliche Linie Konstruktor
+CgPolyline::CgPolyline(std::vector<glm::vec3> verticies, unsigned int lineWidth): //unendliche Linie Konstruktor
     m_type(Cg::Polyline),
-    m_id(id)
+    m_id(total_ids++)
 {
 
     m_verticies = verticies;

@@ -18,7 +18,8 @@ public:
 
 
 private:
-
+    void calculateFaceNormals();
+    void calculateFaceFocus();
 
 
 

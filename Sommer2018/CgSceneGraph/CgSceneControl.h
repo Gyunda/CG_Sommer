@@ -5,14 +5,18 @@
 #include "CgBase/CgBaseSceneControl.h"
 #include <glm/glm.hpp>
 #include <vector>
+#include "CgPolyline.h"
 
 class CgBaseEvent;
 class CgBaseRenderer;
 class CgExampleTriangle;
 class ObjectMesh;
 class CgCube;
+class CgCylinder;
 class ObjectMeshCreator;
 class CGIdGiver;
+class RotationObject;
+
 
 class CgSceneControl : public CgObserver, public CgBaseSceneControl
 {
@@ -25,9 +29,13 @@ public:
     void renderObjects();
 
 private:
+    CgPolyline *line;
+    ObjectMesh* simpleObject;
+    RotationObject* rotationObject;
 
     CgBaseRenderer* m_renderer;
-
+    std::vector<CgPolyline*> m_facenormals;
+    std::vector<CgPolyline*> m_vertexnormals;
     ObjectMeshCreator* creator;
     CGIdGiver* idGiver;
     std::vector<ObjectMesh*> objects;
