@@ -4,11 +4,19 @@ ObjectMeshCreator::ObjectMeshCreator()
 {
 }
 
-ObjectMesh* ObjectMeshCreator::createCube() {
-    return new CgCube();
+ObjectMesh* ObjectMeshCreator::createObject(int id) {
+
 }
 
-ObjectMesh* ObjectMeshCreator::createCylinder() {
-    return new CgCylinder(6, 3, 1);
+CgCube* ObjectMeshCreator::createCube(int id) {
+    return new CgCube(id);
+}
+
+CgCylinder* ObjectMeshCreator::createCylinder(int id) {
+    return new CgCylinder(id, 6, 3, 1);
   }
+
+ObjectMesh* ObjectMeshCreator::createRotationObject(int id) {
+   // return new RotationObject();
+}
 

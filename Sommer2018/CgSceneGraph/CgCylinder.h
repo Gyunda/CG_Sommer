@@ -11,7 +11,7 @@ class CgCylinder : public ObjectMesh
 {
 public:
         CgCylinder();
-        CgCylinder(int anzahl_kreispunkte, int anzahl_hoehe, double hoehe);
+        CgCylinder(int id, int anzahl_kreispunkte, int anzahl_hoehe, double hoehe);
         ~CgCylinder();
         void punkte();
         void kreisflaechen();
@@ -34,10 +34,6 @@ public:
 
 
 };
-
-
-
-
 
 
 #endif // CGCYLINDER_H

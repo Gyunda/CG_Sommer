@@ -3,7 +3,7 @@
 
 #define SIZE 0.25
 
-CgCube::CgCube()
+CgCube::CgCube(int id) : ObjectMesh(id)
 {
     //8 Eckpunkte für Würfel
     m_vertices.push_back(glm::vec3(-SIZE,-SIZE,SIZE)); //0 //Würfel

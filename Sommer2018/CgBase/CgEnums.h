@@ -28,10 +28,12 @@ namespace Cg{
 
     // unused, may be changed to whatever
     CgColorChangedEvent             = 0x0001000,
-    CgDrawEvent                     = 0x0002000,
-    CgSmoothLineEvent               = 0x0004000,
-    CgSomeSpecialEvent4             = 0x0008000,
-    CgEventGroup1                   = 0x000f000,
+    CgUnterteilungsEvent            = 0x0002000, //4-Punkt
+    CgRotateEvent                   = 0x0004000, //verschieben im Szenegraph
+    CgResetEvent                    = 0x0008000, //Zurücksetzen
+    CgEventGroup1                   = 0x000f000, //geht irgendwie nicht
+    CgTranslationEvent              = 0x0020000,
+    CgVertexNormalsEvent            = 0x0040000, //zeichnet/löscht Vertexnormale
 
     // feel free to add whatever you like
     }EventType;

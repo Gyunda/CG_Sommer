@@ -12,7 +12,8 @@
 class ObjectMesh : public CgBaseTriangleMesh
 {
 public:
-    ObjectMesh();
+    ObjectMesh(int id);
+    ~ObjectMesh();
     void print_ids();
 
     //inherited from CgBaseTriangleMesh
@@ -27,6 +28,10 @@ public:
     const std::vector<glm::vec3>& getFaceColors() const;
     const std::vector<glm::vec3>& getFaceFocus() const;
 
+    void berechneFaceNormals();
+    void berechneVertexNormals();
+
+
     //inherited from CgBaseRenderableObject
     Cg::ObjectType getType() const;
     unsigned int getID() const;
@@ -37,7 +42,7 @@ public:
 
 protected:
     const unsigned int m_id;
-    static unsigned int total_ids;
+
 
     //inherited from CGBaseTriangleMesh:
     std::vector<glm::vec3> m_vertices;

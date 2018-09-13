@@ -26,9 +26,17 @@ SOURCES += main.cpp \
     CgSceneGraph/CgCylinder.cpp \
     CgEvents/CgColorChangedEvent.cpp \
     CgSceneGraph/CGIdGiver.cpp \
-    CgEvents/CgDrawEvent.cpp \
-    CgEvents/CgSmoothLineEvent.cpp \
-    CgSceneGraph/RotationObject.cpp
+    CgSceneGraph/RotationObject.cpp \
+    CgEvents/CgResetEvent.cpp \
+    CgEvents/CgUnterteilungsEvent.cpp \
+    CgEvents/CgRotateEvent.cpp \
+    CgEvents/CgVertexNormalsEvent.cpp \
+    CgSceneGraph/CgAppearance.cpp \
+    CgSceneGraph/CgScenegraphEntity.cpp \
+    CgUtils/MatrixUtils.cpp \
+    CgSceneGraph/CgSelectObject.cpp \
+    CgSceneGraph/CgScenegraph.cpp \
+    CgEvents/CgTranslationEvent.cpp
 
 HEADERS += \
     CgQtViewer/CgQtGLRenderWidget.h \
@@ -63,7 +71,15 @@ HEADERS += \
     CgSceneGraph/CgCylinder.h \
     CgEvents/CgColorChangedEvent.h \
     CgSceneGraph/CGIdGiver.h \
-    CgEvents/CgDrawEvent.h \
-    CgEvents/CgSmoothLineEvent.h \
-    CgSceneGraph/RotationObject.h
+    CgSceneGraph/RotationObject.h \
+    CgEvents/CgResetEvent.h \
+    CgEvents/CgUnterteilungsEvent.h \
+    CgEvents/CgRotateEvent.h \
+    CgEvents/CgVertexNormalsEvent.h \
+    CgSceneGraph/CgAppearance.h \
+    CgSceneGraph/CgScenegraphEntity.h \
+    CgUtils/MatrixUtils.h \
+    CgSceneGraph/CgSelectObject.h \
+    CgSceneGraph/CgScenegraph.h \
+    CgEvents/CgTranslationEvent.h
 

@@ -11,7 +11,7 @@ class CgCube : public ObjectMesh
 {
 
 public:
-    CgCube();
+    CgCube(int id);
     ~CgCube();
 
 

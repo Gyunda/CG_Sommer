@@ -48,6 +48,7 @@ QT_BEGIN_NAMESPACE
 class QSlider;
 class QPushButton;
 class QButtonGroup;
+class QLineEdit;
 class QTabWidget;
 class QTextEdit;
 class QCheckBox;
@@ -60,6 +61,8 @@ class CgQtGLRenderWidget;
 class CgQtMainApplication;
 class CgQtGuiEventHandler;
 class CgBaseRenderer;
+class CgResetEvent;
+class CgUnterteilungsEvent;
 
 class CgQtGui : public QWidget,public CgObservable
 {
@@ -69,10 +72,8 @@ public:
     CgQtGui(CgQtMainApplication *mw);
     CgBaseRenderer* getRenderer();
 
-
 protected:
     void keyPressEvent(QKeyEvent *event) Q_DECL_OVERRIDE;
-
 
 private:
     QSlider *createSlider();
@@ -81,16 +82,21 @@ private:
     QSlider* mySlider2;
     QSlider* mySlider3;
 
+    QLineEdit* vektorX;
+    QLineEdit* vektorY;
+    QLineEdit* vektorZ;
+
+    QLineEdit* aufloesung;
+
     // parts of the view
     CgQtGLRenderWidget*    m_glRenderWidget;
-    CgQtMainApplication*        m_mainWindow;
+    CgQtMainApplication*   m_mainWindow;
     QTabWidget*            m_exercises_tabWidget;
     QWidget*			   m_scene_tree_view;
     QTextEdit*             m_log_browser;
     QMenuBar *             m_menuBar;
 
     CgQtGuiEventHandler*   m_event_handler;
-
 
     QWidget*               m_cube_cylinder_panel;
     QWidget*               m_option_panel_ex1;
@@ -99,22 +105,17 @@ private:
     QWidget*               m_option_panel_ex4;
     QWidget*               m_option_panel_ex5;
 
-
     /* example for usage of qt gui elements, feel free to add what you like */
-    void createCubePanel(QWidget* panel);
-    void createCylinderPanel(QWidget* panel);
-    void createRotatePanel(QWidget* panel);
+    void createOptionPanelRotation(QWidget* panel);
     void createOptionPanelExample1(QWidget* panel);
     void createOptionPanelExample2(QWidget* panel);
     void createOptionPanelCubeColor(QWidget* panel);
+    void createOptionPanelTransformation(QWidget* panel);
     QButtonGroup* myButtonGroup;
     QCheckBox* myCheckBox1;
     QSpinBox* mySpinBox1;
 
-
 private slots:
-
-
 
     /* slots to catch events directly from renderer */
     void mouseEvent(QMouseEvent* event);
@@ -122,24 +123,17 @@ private slots:
     void slotTrackballChanged();
 
     /* slots example qt gui elements */
-    void slotDrawCube();
-    void slotDrawCylinder();
-    void slotDrawFaceNormals();
-    void slotDrawVertexNormals();
-    void slotSmoothLine();
+    void slotUnterteilung();
+    void slotResetCurve();
     void slotRotateLine();
+    void slotDrawVertexNormals(bool checked);
+    void slotTranslation();
     void slotMySliderChanged();
     void slotMySpinBox1Changed();
     void slotMyCheckBox1Changed();
     void slotMyButton1Pressed();
     void slotButtonGroupSelectionChanged();
     void slotLoadMeshFile();
-
-
-
-
-
-
 };
 
 #endif

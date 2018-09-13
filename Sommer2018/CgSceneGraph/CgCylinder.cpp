@@ -7,12 +7,9 @@
 
 #define r 0.25;
 
-CgCylinder::CgCylinder()
-{
 
-}
 
-CgCylinder::CgCylinder(int anzahl_kreispunkte, int anzahl_hoehe, double hoehe)
+CgCylinder::CgCylinder(int id, int anzahl_kreispunkte, int anzahl_hoehe, double hoehe) : ObjectMesh(id)
 {
  this->anzahl_kreispunkte= anzahl_kreispunkte;
  this->hoehe= hoehe;

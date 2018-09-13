@@ -5,9 +5,12 @@
 #include "CgEvents/CgWindowResizeEvent.h"
 #include "CgEvents/CgLoadObjFileEvent.h"
 #include "CgEvents/CgTrackballEvent.h"
-#include "CgEvents/CgDrawEvent.h"
 #include "../CgEvents/CgColorChangedEvent.h"
-#include "CgEvents/CgSmoothLineEvent.h"
+#include "CgEvents/CgRotateEvent.h"
+#include "CgEvents/CgResetEvent.h"
+#include "CgEvents/CgUnterteilungsEvent.h"
+#include "CgEvents/CgVertexNormalsEvent.h"
+#include "CgEvents/CgTranslationEvent.h"
 #include "CgBase/CgBaseRenderer.h"
 #include "CgExampleTriangle.h"
 #include "ObjectMesh.h"
@@ -20,50 +23,143 @@
 #include <string>
 #include "CgPolyline.h"
 #include "RotationObject.h"
+#include "CgSelectObject.h"
+#include "CgScenegraph.h"
+#include "CgScenegraphEntity.h"
+#include "CgUtils/MatrixUtils.h"
 
+
+CgSceneControl* CgSceneControl::instance = 0;
+
+CgSceneControl* CgSceneControl::getInstance() {
+    if(instance == 0) {
+        instance = new CgSceneControl();
+    }
+    return instance;
+}
+
+unsigned int CgSceneControl::getId() {
+    id++;
+    return id;
+}
 
 
 CgSceneControl::CgSceneControl()
 {
+    id = 0;
     creator = new ObjectMeshCreator();
-    idGiver = CGIdGiver::getInstance();
-    //objects.push_back(creator->createCube());
-    //objects.push_back(creator->createCylinder());
-    //simpleObject = creator->createCube();
-    //for(int i = 0; i < simpleObject->getFaceFocus().size(); i++) {
-     //   m_facenormals.push_back(new CgPolyline(simpleObject->getFaceFocus().at(i), simpleObject->getFaceFocus().at(i) + simpleObject->getFaceNormals().at(i), glm::vec3(1.0, 1.0, 1.0), 0.5));
-    //}
-    m_triangle = NULL;
+    cube = NULL;
+    cylinder = NULL;
+    line = NULL;
+    m_object = NULL;
+    //m_vierPunkt = NULL;
+std::vector<glm::vec3> list;
+   /* glm::vec3 a = glm::vec3(0.5,0.0, 0.0);
+    glm::vec3 b = glm::vec3(2.0, 2.0, 0.0);
+    glm::vec3 c = glm::vec3(3.0, 4.0, 0.0);
+    glm::vec3 d = glm::vec3(1.0, 6.0, 0.0);
+
+    list.push_back(a);
+    list.push_back(b);
+    list.push_back(c);
+    list.push_back(d);*/
+    list.push_back(glm::vec3(0.0,0.37,0.0));
+     list.push_back(glm::vec3(0.1,0.35,0.0));
+     list.push_back(glm::vec3(0.13,0.30,0.0));
+     list.push_back(glm::vec3(0.1,0.25,0.0));
+     list.push_back(glm::vec3(0.06,0.22,0.0));
+     list.push_back(glm::vec3(0.08,0.20,0.0));
+     list.push_back(glm::vec3(0.03,0.08,0.0));
+
+     //Körper
+     list.push_back(glm::vec3(0.08,-0.03,0.0));
+     list.push_back(glm::vec3(0.13,-0.08,0.0));
+     list.push_back(glm::vec3(0.13,-0.17,0.0));
+     list.push_back(glm::vec3(0.1,-0.20,0.0));
+     list.push_back(glm::vec3(0.0,-0.20,0.0));
+    m_vierPunkt = new CgPolyline(getId(),list, 0.1);
+
+    //Szenegraphen shit
+  /*   m_matrixUtils = new MatrixUtils();
+         CgAppearance* app= new CgAppearance(glm::vec4(1.0, 0.0, 0.0, 1.0));
+
+         graph= new CgScenegraph();
+         // index:0
+         graph->createMeshObjectCylinder(getId());
+         // index:1
+         graph->createMeshObjectCube(getId());
+         //index:2
+         graph->createMeshObjectCube(getId());
+         //index:3
+         graph->createMeshObjectCube(getId());
+         //index:4
+         graph->createMeshObjectCube(getId());
+
+         entity = new CgScenegraphEntity(graph->getObjList().at(0), glm::mat4(0.5), app);
+         entity2 = new CgScenegraphEntity(graph->getObjList().at(1), glm::mat4(0.5), app);
+         entity3 = new CgScenegraphEntity(graph->getObjList().at(2),glm::mat4(2),app);
+         entity4 = new CgScenegraphEntity(graph->getObjList().at(3),glm::mat4(0.5),app);
+         entity5 = new CgScenegraphEntity(graph->getObjList().at(4),glm::mat4(0.5),app);
 
 
-    rotationObject = new RotationObject();
-    line = rotationObject->getLine();
+
+         graph->setRootNode(entity);
+         entity->addChild(entity2);
+         entity2->addChild(entity3);
+         entity3->addChild(entity4);
+         entity4->addChild(entity5);
+
+         std::cout << "ObjList: " << graph->getObjList().size() << std::endl;
+
+         m_select = new CgSelectObject(graph->getRootNode());
+*/
+
+    rotationObject = NULL;
 
      m_current_transformation=glm::mat4(1.);
       m_lookAt_matrix= glm::lookAt(glm::vec3(0.0,0.0,1.0),glm::vec3(0.0,0.0,0.0),glm::vec3(0.0,1.0,0.0));
      m_proj_matrix= glm::mat4x4(glm::vec4(1.792591, 0.0, 0.0, 0.0), glm::vec4(0.0, 1.792591, 0.0, 0.0), glm::vec4(0.0, 0.0, -1.0002, -1.0), glm::vec4(0.0, 0.0, -0.020002, 0.0));
    m_trackball_rotation=glm::mat4(1.);
 
-   // line = new CgPolyline(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.2, 0.5, 0.4), glm::vec3(0.0, 1.0, 1.0), 0.5);
-    //polylines.push_back(line);
+}
+
+CgSceneControl::CgSceneControl(const CgSceneControl &) {
+
 }
 
 
 CgSceneControl::~CgSceneControl()
 {
-    if(m_triangle!=NULL) {
-        delete m_triangle;
-    }
-    //for(int i = 0; i < objects.size(); i++) {
-     //       delete objects.at(i);
-       // }
-    //for(int i = 0; i < polylines.size(); i++) {
-      //  delete polylines.at(i);
-   // if(simpleObject != NULL) {
-     //   delete simpleObject;
-    //}
     if(line !=NULL) {
         delete line;
+    }
+    if(cube !=NULL) {
+        delete cube;
+    }
+    if(cylinder != NULL) {
+        delete cylinder;
+    }
+    if(m_vierPunkt != NULL) {
+        delete m_vierPunkt;
+    }
+    if(rotationObject != NULL) {
+        delete rotationObject;
+    }
+    if(m_facenormals.size() > 0) {
+        for(int i = 0; i < m_facenormals.size(); i++) {
+            m_facenormals.pop_back();
+        }
+    }
+    if(m_vertexnormals.size() > 0) {
+        for(int i = 0; i < m_vertexnormals.size(); i++) {
+            m_vertexnormals.pop_back();
+        }
+    }
+    if(objects.size() > 0) {
+        objects.clear();
+    }
+    if(m_object != NULL) {
+        delete m_object;
     }
 }
 
@@ -71,24 +167,49 @@ void CgSceneControl::setRenderer(CgBaseRenderer* r)
 {
     m_renderer=r;
     m_renderer->setSceneControl(this);
-   // m_renderer->init(simpleObject);
-    //for(int i = 0; i<m_facenormals.size(); i++) {
-      //  m_renderer->init(m_facenormals.at(i));
-    //}
+    if(cube != NULL) {
+        m_renderer->init(cube);
+    }
+    if(cylinder != NULL) {
+        m_renderer->init(cylinder);
+    }
+    if(line != NULL) {
+        m_renderer->init(line);
+    }
+    if(m_vierPunkt != NULL) {
+        m_renderer->init(m_vierPunkt);
+    }
+    if(rotationObject != NULL) {
+        m_renderer->init(rotationObject);
+    }
+    if(m_facenormals.size() > 0) {
+        for(int i = 0; i < m_facenormals.size(); i++) {
+            m_renderer->init(m_facenormals.at(i));
+        }
+    }
+    if(m_vertexnormals.size() > 0) {
+        for(int i = 0; i < m_vertexnormals.size(); i++) {
+            m_renderer->init(m_vertexnormals.at(i));
+        }
+    }
+    if(objects.size() > 0) {
+        for(int i = 0; i < objects.size(); i++) {
+            m_renderer->init(objects.at(i));
+        }
+    }
+    if(m_object != NULL) {
+        m_renderer->init(m_object);
+    }
 
-    //m_renderer->init(objects.at(0));
-    //m_renderer->init(objects.at(1));
-    m_renderer->init(line);
-    m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0)); //eingefügt damit color change richtig läuft (so ein bullshit)
+   // graph->init(m_renderer);
+
+    m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0)); //eingefügt damit color change richtig läuft
 
 }
 
 
 void CgSceneControl::renderObjects()
 {
-
-    // Materialeigenschaften setzen
-    // sollte ja eigentlich pro Objekt unterschiedlich sein können, naja bekommen sie schon hin....
 
     //m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0));
 
@@ -112,19 +233,43 @@ void CgSceneControl::renderObjects()
     m_renderer->setUniformValue("modelviewMatrix",mv_matrix);
     m_renderer->setUniformValue("normalMatrix",normal_matrix);
 
-    if(m_triangle!=NULL)
-    m_renderer->render(m_triangle);
-    //for(int i = 0; i < objects.size(); i++) {
-      //  if(objects.at(i) != NULL) {
-        //    m_renderer->render(objects.at(i));
-    //if(simpleObject != NULL) {
-      //  m_renderer->render(simpleObject);
-        //}
-    //for(int i = 0; i<m_facenormals.size(); i++) {
-      //  m_renderer->render(m_facenormals.at(i));
-    //}
-    m_renderer->render(line);
+    if(cube != NULL) {
+        m_renderer->render(cube);
     }
+    if(cylinder != NULL) {
+        m_renderer->render(cylinder);
+    }
+    if(line != NULL) {
+        m_renderer->render(line);
+    }
+    if(m_vierPunkt != NULL) {
+        m_renderer->render(m_vierPunkt);
+    }
+    if(rotationObject != NULL) {
+        m_renderer->render(rotationObject);
+    }
+    if(m_facenormals.size() > 0) {
+        for(int i = 0; i < m_facenormals.size(); i++) {
+            m_renderer->render(m_facenormals.at(i));
+        }
+    }
+    if(m_vertexnormals.size() > 0) {
+        for(int i = 0; i < m_vertexnormals.size(); i++) {
+            m_renderer->render(m_vertexnormals.at(i));
+        }
+    }
+    if(objects.size() > 0) {
+        for(int i = 0; i < objects.size(); i++) {
+            m_renderer->render(objects.at(i));
+        }
+    }
+    if(m_object != NULL) {
+        m_renderer->render(m_object);
+    }
+
+   // graph->render(m_renderer);
+
+}
 
 
 
@@ -179,6 +324,33 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
             m_current_transformation=m_current_transformation*scalemat;
             m_renderer->redraw();
         }
+        if(ev->text()== "v") {
+            std::cout << "habe v gedrückt" << std::endl;
+            if(cube != NULL) {
+
+            }
+        }
+        //Element im Szenegraphen
+                if(ev->text()=="q"){
+                    //aufruf nächstes Element im Szenegraphen
+                    m_select->nextNode();
+                }
+                //rotation um x Achse
+                if(ev->text()=="x"){
+                    m_select->getCurrentNode()->setCurrentTransformation(m_select->getCurrentNode()->getCurrentTransformation() * m_matrixUtils->getXrotationMatrix());
+
+                }
+                //rotation um y Achse
+                if(ev->text()=="y"){
+                     m_select->getCurrentNode()->setCurrentTransformation(m_select->getCurrentNode()->getCurrentTransformation() * m_matrixUtils->getYrotationMatrix());
+
+                }
+                //rotation um z Achse
+                if(ev->text()=="z"){
+                     m_select->getCurrentNode()->setCurrentTransformation(m_select->getCurrentNode()->getCurrentTransformation() * m_matrixUtils->getZrotationMatrix());
+
+                }
+                m_renderer->redraw();
         // hier kommt jetzt die Abarbeitung des Events hin...
     }
 
@@ -193,6 +365,7 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
     {
 
         CgLoadObjFileEvent* ev = (CgLoadObjFileEvent*)e;
+
 
 
         ObjLoader* loader= new ObjLoader();
@@ -210,9 +383,13 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
           loader->getFaceIndexData(indx);
 
 
+        m_object = new ObjectMesh(getId());
 
-        objects.at(0)->init(pos,norm,indx);
-        m_renderer->init(objects.at(0));
+
+
+
+        m_object->init(pos,norm,indx);
+        setRenderer(m_renderer);
         m_renderer->redraw();
     }
 
@@ -225,44 +402,108 @@ void CgSceneControl::handleEvent(CgBaseEvent* e)
         m_renderer->redraw();
     }
 
-    if(e->getType() & Cg::CgDrawEvent) {
-        CgDrawEvent* ev = (CgDrawEvent*)e;
 
-        if(ev->getKoerper() == 1) {
-            simpleObject = creator->createCube();
-            std::cout << "zeichne würfel" << std::endl;
-        } else if(ev->getKoerper() == 2) {
-            simpleObject = creator->createCylinder();
-            std::cout << "zeichne zylinder" << std::endl;
-        } else if(ev->getKoerper() == 3) {
-            for(int i = 0; i < simpleObject->getFaceFocus().size(); i++) {
-                m_facenormals.push_back(new CgPolyline(simpleObject->getFaceFocus().at(i), simpleObject->getFaceFocus().at(i) + simpleObject->getFaceNormals().at(i), glm::vec3(1.0, 1.0, 1.0), 0.5));
+
+
+    if(e->getType() & Cg::CgRotateEvent) {
+        CgRotateEvent* ev = (CgRotateEvent*)e;
+        if(rotationObject != NULL) {
+            std::cout << "Ist bereits rotiert." << std::endl;
+            delete rotationObject;
+            rotationObject = NULL;
+            m_facenormals.clear();
+            m_vertexnormals.clear();
+
+        } else if(m_vierPunkt == NULL) {
+            std::cout << "Keine Linie zum Rotieren" << std::endl;
+        } else {
+            rotationObject = new RotationObject(getId(), m_vierPunkt, ev->getAufloesung());
+            std::cout << "Rotiere." << std::endl;
+        }
+        setRenderer(m_renderer);
+        m_renderer->redraw();
+    }
+
+    if(e->getType() & Cg::CgUnterteilungsEvent)
+        {
+            CgUnterteilungsEvent* ev = (CgUnterteilungsEvent*)e;
+            if(rotationObject != NULL) {
+                m_vierPunkt->vierPunkt();
+                delete rotationObject;
+                rotationObject = new RotationObject(getId(), m_vierPunkt, ev->getAufloesung());
+
+                m_vertexnormals.clear();
+                m_facenormals.clear();
+                if(m_vertexnormals.size() > 0) {
+                    for(int i = 0; i < rotationObject->getVertexNormals().size(); i++) {
+
+                        glm::vec3 start = rotationObject->getVertices().at(i);
+                        glm::vec3 ende = rotationObject->getVertices().at(i) + rotationObject->getVertexNormals().at(i);
+                        m_vertexnormals.push_back(new CgPolyline(getId(), start, ende, glm::vec3(1.0,1.0,1.0), 0.1));
+                    }
+                }
+            } else {
+                m_vierPunkt->vierPunkt();
             }
-            for(int i = 0; i < m_facenormals.size(); i++) {
-                m_renderer->init(m_facenormals.at(i));
-                m_renderer->render(m_facenormals.at(i));
-            }
-            std::cout << "zeichne face normale" << std::endl;
-        } else if(ev->getKoerper() == 4) {
-            std::cout << "zeichne vertex normale" << std::endl;
+            setRenderer(m_renderer);
+            m_renderer->redraw();
+            std::cout << *ev <<std::endl;
         }
 
-        m_renderer->init(simpleObject);
-        m_renderer->render(simpleObject);
-        m_renderer->setUniformValue("mycolor",glm::vec4(1.0,1.0,1.0,1.0));
-        m_renderer->redraw();
-    }
+     if(e->getType() & Cg::CgResetEvent){
+         CgResetEvent* ev = (CgResetEvent*)e;
+         m_vierPunkt->reset();
+         setRenderer(m_renderer);
+         m_renderer->redraw();
+         std::cout << *ev <<std::endl;
+     }
 
-    if(e->getType() & Cg::CgSmoothLineEvent) {
-        CgSmoothLineEvent* ev = (CgSmoothLineEvent*)e;
-        rotationObject->smoothLine();
-        line = rotationObject->getLine();
-        setRenderer(m_renderer);
-        m_renderer->init(line);
-        m_renderer->render(line);
-        m_renderer->redraw();
-        //std::cout << "shizzle" << std::endl;
-    }
+     if(e->getType() & Cg::CgVertexNormalsEvent) {
+         CgVertexNormalsEvent* ev = (CgVertexNormalsEvent*)e;
+         if(ev->getChecked() == true) {
+            /* for(int i = 0; i < rotationObject->getFaceNormals().size(); i++) {
+                 glm::vec3 start = rotationObject->getFaceFocus().at(i);
+                 glm::vec3 ende = rotationObject->getFaceFocus().at(i) + rotationObject->getFaceNormals().at(i);
+                 m_facenormals.push_back(new CgPolyline(getId(), start, ende, glm::vec3(1.0,1.0,1.0), 0.1));
+             }*/
+            if(rotationObject != NULL) {
+                 for(int i = 0; i < rotationObject->getVertexNormals().size(); i++) {
+
+                     glm::vec3 start = rotationObject->getVertices().at(i);
+                     glm::vec3 ende = rotationObject->getVertices().at(i) + rotationObject->getVertexNormals().at(i);
+                     m_vertexnormals.push_back(new CgPolyline(getId(), start, ende, glm::vec3(1.0,1.0,1.0), 0.1));
+                 }
+            } else if(cube != NULL) {
+                for(int i = 0; i < cube->getVertexNormals().size(); i++) {
+
+                    glm::vec3 start = cube->getVertices().at(i);
+                    glm::vec3 ende = cube->getVertices().at(i) + cube->getVertexNormals().at(i);
+                    m_vertexnormals.push_back(new CgPolyline(getId(), start, ende, glm::vec3(1.0,1.0,1.0), 0.1));
+                }
+            } else if(cylinder != NULL) {
+                for(int i = 0; i < cylinder->getVertexNormals().size(); i++) {
+
+                    glm::vec3 start = cylinder->getVertices().at(i);
+                    glm::vec3 ende = cylinder->getVertices().at(i) + cylinder->getVertexNormals().at(i);
+                    m_vertexnormals.push_back(new CgPolyline(getId(), start, ende, glm::vec3(1.0,1.0,1.0), 0.1));
+                }
+            } else {
+                std::cout << "keine Vertexnormalen gezeichnet." << std::endl;
+            }
+         } else {
+             m_vertexnormals.clear();
+         }
+         setRenderer(m_renderer);
+         m_renderer->redraw();
+     }
+
+     if(e->getType() & Cg::CgTranslationEvent)
+         {
+             CgTranslationEvent* ev = (CgTranslationEvent*)e;
+             m_select->getCurrentNode()->setCurrentTransformation(m_select->getCurrentNode()->getCurrentTransformation() * m_matrixUtils->translationMatrix(ev->getVektorTranslation()));
+             m_renderer->redraw();
+             std::cout << *ev <<std::endl;
+         }
 
     // an der Stelle an der ein Event abgearbeitet ist wird es auch gelöscht.
     delete e;

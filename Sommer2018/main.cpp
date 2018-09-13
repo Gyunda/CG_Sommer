@@ -69,8 +69,7 @@ int main(int argc, char **argv) {
     /*************************************************************************************/
     /*   Control: Scene-Controller erzeugen                                              */
     /*************************************************************************************/
-       CGIdGiver* idGiver = CGIdGiver::getInstance();
-       CgSceneControl* scene_control = new CgSceneControl();
+       CgSceneControl* scene_control = CgSceneControl::getInstance();
 
        // Controller und View über Observer Pattern verbinden
        mainApp.getGui()->attachObserver(scene_control);

@@ -5,15 +5,17 @@
 #include <glm/glm.hpp>
 #include <iostream>
 
-class CgSmoothLineEvent: public CgBaseEvent
+class CgRotateEvent: public CgBaseEvent
 {
 public:
-    CgSmoothLineEvent();
-    ~CgSmoothLineEvent();
+    CgRotateEvent(int newAufloesung);
+    ~CgRotateEvent();
     Cg::EventType getType();
+    int getAufloesung();
 private:
     Cg::EventType m_type;
     CgBaseEvent* clone();
+    int aufloesung;
 };
 
 #endif // CGSMOOTHLINEEVENT_H

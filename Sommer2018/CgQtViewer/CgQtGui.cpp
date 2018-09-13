@@ -1,6 +1,7 @@
 
 
 #include "CgQtGLRenderWidget.h"
+#include "QLineEdit"
 #include "CgQtGui.h"
 #include "CgQtMainApplication.h"
 #include "../CgBase/CgEnums.h"
@@ -10,8 +11,11 @@
 #include "../CgEvents/CgLoadObjFileEvent.h"
 #include "../CgEvents/CgTrackballEvent.h"
 #include "../CgEvents/CgColorChangedEvent.h"
-#include "../CgEvents/CgDrawEvent.h"
-#include "../CgEvents/CgSmoothLineEvent.h"
+#include "../CgEvents/CgRotateEvent.h"
+#include "../CgEvents/CgResetEvent.h"
+#include "../CgEvents/CgUnterteilungsEvent.h"
+#include "../CgEvents/CgVertexNormalsEvent.h"
+#include "../CgEvents/CgTranslationEvent.h"
 #include <QSlider>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -51,19 +55,8 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QHBoxLayout *container = new QHBoxLayout;
 
 
-
-
-    QWidget *cube = new QWidget;
-    createCubePanel(cube);
-
-    QWidget *cylinder = new QWidget;
-    createCylinderPanel(cylinder);
-
     QWidget *cubeColor = new QWidget;
     createOptionPanelCubeColor(cubeColor);
-
-    QWidget *rotate = new QWidget;
-    createRotatePanel(rotate);
 
     QWidget *opt = new QWidget;
     createOptionPanelExample1(opt);
@@ -71,15 +64,20 @@ CgQtGui::CgQtGui(CgQtMainApplication *mw)
     QWidget *otheropt = new QWidget;
     createOptionPanelExample2(otheropt);
 
+    QWidget *rotation = new QWidget;
+    createOptionPanelRotation(rotation);
+
+    QWidget *transformation = new QWidget;
+    createOptionPanelTransformation(transformation);
+
 
 
     QTabWidget* m_tabs = new QTabWidget();
-    m_tabs->addTab(cube,"&Würfel");
-    m_tabs->addTab(cylinder, "Zylinder");
     m_tabs->addTab(cubeColor, "&Farbe");
-    m_tabs->addTab(rotate, "&Rotationskörper");
+    m_tabs->addTab(rotation, "&Rotation");
     m_tabs->addTab(opt,"&My Tab1");
     m_tabs->addTab(otheropt,"&My Tab2");
+    m_tabs->addTab(transformation, "&Transformation");
     container->addWidget(m_tabs);
 
     m_tabs->setMaximumWidth(400);
@@ -162,60 +160,104 @@ QSlider *CgQtGui::createSlider()
 
 //Panels in der GUI
 
-void CgQtGui::createCubePanel(QWidget *parent) {
-    QVBoxLayout *cube_control = new QVBoxLayout();
-    QPushButton* cube = new QPushButton("Würfel");
-    connect(cube, SIGNAL(clicked()), this, SLOT(slotDrawCube()));
-    QCheckBox* facenormale = new QCheckBox("Facenormale");
-    connect(facenormale, SIGNAL(clicked()), this, SLOT(slotDrawFaceNormals()));
-    QPushButton* clear = new QPushButton("löschen");
 
-    cube_control->addWidget(cube);
-    cube_control->addWidget(facenormale);
-    cube_control->addWidget(clear);
+void CgQtGui::createOptionPanelCubeColor(QWidget* parent)
+{
+    QVBoxLayout *tab3_control = new QVBoxLayout();  //Layout erstellen
 
-    parent->setLayout(cube_control);
+    QLabel *options_label = new QLabel("Slider");   //Name erstellen
+    tab3_control->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignTop);
+
+    mySlider1 = createSlider();   //slider
+    mySlider2 = createSlider();
+    mySlider3 = createSlider();
+    tab3_control->addWidget(mySlider1);
+    tab3_control->addWidget(mySlider2);
+    tab3_control->addWidget(mySlider3);
+
+
+    parent->setLayout(tab3_control);
+
 }
 
-void CgQtGui::createCylinderPanel(QWidget *parent) {
-    QVBoxLayout *cylinder_control = new QVBoxLayout();
-    QPushButton* cylinder = new QPushButton("Zylinder");
-    connect(cylinder, SIGNAL(clicked()), this, SLOT(slotDrawCylinder()));
-    QSpinBox* rotation = new QSpinBox();
-    rotation->setMinimum(4);
-    rotation->setMaximum(100);
-    rotation->setValue(6);
-    QSpinBox* hoehe = new QSpinBox();
-    hoehe->setMinimum(1);
-    hoehe->setMaximum(100);
-    hoehe->setValue(3);
-    QCheckBox* facenormale = new QCheckBox("Facenormale");
-    connect(facenormale, SIGNAL(clicked()), this, SLOT(slotDrawFaceNormals()));
-    QCheckBox* vertexnormale = new QCheckBox("Vertexnormale");
-    QPushButton* clear = new QPushButton("löschen");
+void CgQtGui::createOptionPanelRotation(QWidget* parent)
+{
+    QVBoxLayout *tabRotation_control = new QVBoxLayout();
 
-    cylinder_control->addWidget(cylinder);
-    cylinder_control->addWidget(rotation);
-    cylinder_control->addWidget(hoehe);
-    cylinder_control->addWidget(facenormale);
-    cylinder_control->addWidget(vertexnormale);
-    cylinder_control->addWidget(clear);
+    QLabel *options_label = new QLabel("Rotationskörper und Glättung");
+    tabRotation_control->addWidget(options_label);
+    options_label->setAlignment(Qt::AlignTop);
 
-    parent->setLayout(cylinder_control);
-}
+    QPushButton* myButtonReset = new QPushButton("&Reset Curve");
+    tabRotation_control->addWidget(myButtonReset);
 
-void CgQtGui::createRotatePanel(QWidget *parent) {
-    QVBoxLayout *rotate_control = new QVBoxLayout();
-    QPushButton* smooth = new QPushButton("Glätten");
-    connect(smooth, SIGNAL(clicked()), this, SLOT(slotSmoothLine()));
+    QPushButton* myButtonUnterteilung = new QPushButton("&Unterteilung");
+    tabRotation_control->addWidget(myButtonUnterteilung);
+
     QPushButton* rotate = new QPushButton("Rotieren");
     connect(rotate, SIGNAL(clicked()), this, SLOT(slotRotateLine()));
-    rotate_control->addWidget(smooth);
-    rotate_control->addWidget(rotate);
+    tabRotation_control->addWidget(rotate);
 
-    parent->setLayout(rotate_control);
+    aufloesung = new QLineEdit("8");
+    tabRotation_control->addWidget(aufloesung);
+    QLocale loc(QLocale::C);
+    QIntValidator* validate = new QIntValidator(parent);
+   // loc.setNumberOptions(QLocale::RejectGroupSeparator);
+    validate->setRange(3, 100);
+    //validate->setLocale(loc);
+    aufloesung->setValidator(validate);
+    QCheckBox* closedRotation = new QCheckBox("geschlossen");
+    closedRotation->setCheckable(true);
+    closedRotation->setChecked(false);
+    tabRotation_control->addWidget(closedRotation);
+
+    QCheckBox* renderVertexNormals = new QCheckBox("Vertexnormalen");
+    renderVertexNormals->setCheckable(true);
+    renderVertexNormals->setChecked(false);
+    tabRotation_control->addWidget(renderVertexNormals);
+
+    connect(myButtonUnterteilung, SIGNAL( clicked() ), this, SLOT(slotUnterteilung()) );
+
+    connect(myButtonReset,SIGNAL(clicked()),this, SLOT(slotResetCurve()) );
+
+    connect(renderVertexNormals, SIGNAL(toggled(bool)), this, SLOT(slotDrawVertexNormals(bool)));
+
+    parent->setLayout(tabRotation_control);
 }
 
+
+void CgQtGui::createOptionPanelTransformation(QWidget* parent) {
+    QVBoxLayout *tabTransformation_control = new QVBoxLayout();
+
+        QLabel *options_label = new QLabel("Rotationskörper und Glättung");
+        tabTransformation_control->addWidget(options_label);
+        options_label->setAlignment(Qt::AlignTop);
+
+        vektorX = new QLineEdit("0");
+        vektorY = new QLineEdit("0");
+        vektorZ = new QLineEdit("0");
+        tabTransformation_control->addWidget(vektorX);
+        tabTransformation_control->addWidget(vektorY);
+        tabTransformation_control->addWidget(vektorZ);
+
+        QLocale loc(QLocale::C);
+        QDoubleValidator* validate = new QDoubleValidator(parent);
+        loc.setNumberOptions(QLocale::RejectGroupSeparator);
+        validate->setDecimals(3);
+        validate->setNotation(QDoubleValidator::StandardNotation);
+        validate->setLocale(loc);
+
+        vektorX->setValidator(validate);
+        vektorY->setValidator(validate);
+        vektorZ->setValidator(validate);
+
+        QPushButton* myButtonSet = new QPushButton("&Set Vector");
+        tabTransformation_control->addWidget(myButtonSet);
+        connect(myButtonSet,SIGNAL(clicked() ),this, SLOT(slotTranslation()) );
+
+        parent->setLayout(tabTransformation_control);
+}
 
 
 
@@ -267,6 +309,7 @@ void CgQtGui::createOptionPanelExample1(QWidget* parent)
 
 }
 
+
 void CgQtGui::createOptionPanelExample2(QWidget* parent)
 {
 
@@ -315,27 +358,6 @@ void CgQtGui::createOptionPanelExample2(QWidget* parent)
 }
 
 
-void CgQtGui::createOptionPanelCubeColor(QWidget* parent)
-{
-    QVBoxLayout *tab3_control = new QVBoxLayout();  //Layout erstellen
-
-    QLabel *options_label = new QLabel("Slider");   //Name erstellen
-    tab3_control->addWidget(options_label);
-    options_label->setAlignment(Qt::AlignTop);
-
-    mySlider1 = createSlider();   //slider
-    mySlider2 = createSlider();
-    mySlider3 = createSlider();
-    tab3_control->addWidget(mySlider1);
-    tab3_control->addWidget(mySlider2);
-    tab3_control->addWidget(mySlider3);
-
-
-    parent->setLayout(tab3_control);
-
-}
-
-
 
 //Slots für Events
 
@@ -349,45 +371,42 @@ void CgQtGui::slotMySliderChanged()
 }
 
 
-void CgQtGui::slotDrawCube() {
-    CgBaseEvent* e = new CgDrawEvent(1);
-
-    notifyObserver(e);
-}
-
-void CgQtGui::slotDrawCylinder() {
-    CgBaseEvent* e = new CgDrawEvent(2);
-
-    notifyObserver(e);
-}
-
-void CgQtGui::slotDrawFaceNormals() {
-    CgBaseEvent* e = new CgDrawEvent(3);
-
-    notifyObserver(e);
-}
-
-void CgQtGui::slotDrawVertexNormals() {
-    CgBaseEvent* e = new CgDrawEvent(4);
-
-    notifyObserver(e);
-}
-
-void CgQtGui::slotSmoothLine() {
-    //printf("slotsmoothline\n");
-    CgBaseEvent* e = new CgSmoothLineEvent();
-
-    notifyObserver(e);
-}
 
 void CgQtGui::slotRotateLine() {
+    if(aufloesung->text().isEmpty() || aufloesung->text().toInt() < 3) {
 
+        std::cout << "Bitte eine passende Zahl zwischen 3 und 100 eingeben." << std::endl;
+    } else {
+        CgBaseEvent* e = new CgRotateEvent(aufloesung->text().toInt());
+
+     notifyObserver(e);
+    }
 }
 
 
+void CgQtGui::slotUnterteilung()
+{
+      CgBaseEvent* e = new CgUnterteilungsEvent(aufloesung->text().toInt());
+      notifyObserver(e);
+}
 
+void CgQtGui::slotResetCurve(){
 
+    CgBaseEvent* e= new CgResetEvent();
+    notifyObserver(e);
+}
 
+void CgQtGui::slotDrawVertexNormals(bool checked) {
+
+    CgBaseEvent* e = new CgVertexNormalsEvent(checked);
+    notifyObserver(e);
+}
+
+void CgQtGui::slotTranslation(){
+
+    CgBaseEvent* e= new CgTranslationEvent((vektorX->text().toFloat()),(vektorY->text().toFloat()),(vektorZ->text().toFloat()));
+    notifyObserver(e);
+}
 
 
 void CgQtGui::slotButtonGroupSelectionChanged()

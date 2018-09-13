@@ -12,12 +12,18 @@
 class RotationObject: public ObjectMesh
 {
 public:
-    RotationObject();
+    RotationObject(int id, CgPolyline* newLine, int aufloesung);
     void smoothLine();
+    void rotate(int newanzahl);
     CgPolyline* getLine();
 private:
     CgPolyline* line;
+    float winkel;
+    int anzahl;
+    glm::mat3x3 rotationmatrix;
     std::vector<glm::vec3> list;
+    void calculateVertexNormals();
+    void closeRotationObject();
 };
 
 #endif // ROTATIONOBJECT_H
